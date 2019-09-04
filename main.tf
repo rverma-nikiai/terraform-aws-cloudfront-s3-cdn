@@ -71,7 +71,7 @@ resource "aws_s3_bucket" "origin" {
 }
 
 module "logs" {
-  count                    = var.enable_logging ? 1 : 0
+  enabled                  = var.enable_logging
   source                   = "git::https://github.com/cloudposse/terraform-aws-s3-log-storage.git?ref=tags/0.5.0"
   namespace                = var.namespace
   stage                    = var.stage
