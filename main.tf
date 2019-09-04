@@ -1,3 +1,7 @@
+var "enable_logging" {
+  default = false
+}
+
 module "origin_label" {
   source     = "git::https://github.com/cloudposse/terraform-terraform-label.git?ref=tags/0.4.0"
   namespace  = var.namespace
@@ -71,6 +75,7 @@ resource "aws_s3_bucket" "origin" {
 }
 
 module "logs" {
+  count                    = var.enable_logging ? 1 : 0
   source                   = "git::https://github.com/cloudposse/terraform-aws-s3-log-storage.git?ref=tags/0.5.0"
   namespace                = var.namespace
   stage                    = var.stage
@@ -122,10 +127,13 @@ resource "aws_cloudfront_distribution" "default" {
   price_class         = var.price_class
   depends_on          = [aws_s3_bucket.origin]
 
-  logging_config {
-    include_cookies = var.log_include_cookies
-    bucket          = module.logs.bucket_domain_name
-    prefix          = var.log_prefix
+  dynamic "logging_config" {
+    for_each = module.logs
+    content {
+      include_cookies = var.log_include_cookies
+      bucket          = logging_config.value.bucket_domain_name
+      prefix          = var.log_prefix
+    }
   }
 
   aliases = var.aliases
