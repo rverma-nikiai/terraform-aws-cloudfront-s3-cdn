@@ -124,10 +124,10 @@ resource "aws_cloudfront_distribution" "default" {
   depends_on          = [aws_s3_bucket.origin]
 
   dynamic "logging_config" {
-    for_each = module.logs
+    for_each = module.logs.*.bucket_domain_name
     content {
       include_cookies = var.log_include_cookies
-      bucket          = logging_config.value.bucket_domain_name
+      bucket          = logging_config.value
       prefix          = var.log_prefix
     }
   }
