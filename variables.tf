@@ -48,7 +48,7 @@ variable "acm_certificate_arn" {
 variable "minimum_protocol_version" {
   type        = string
   description = "Cloudfront TLS minimum protocol version"
-  default     = "TLSv1"
+  default     = "TLSv1.1_2016"
 }
 
 variable "aliases" {
@@ -188,7 +188,7 @@ variable "forward_header_values" {
 
 variable "price_class" {
   type        = string
-  default     = "PriceClass_100"
+  default     = "PriceClass_200"
   description = "Price class for this distribution: `PriceClass_All`, `PriceClass_200`, `PriceClass_100`"
 }
 
